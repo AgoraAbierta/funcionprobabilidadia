@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Probabilidad IA</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .color-option, .number-option, .word-option, .phrase-option { padding: 10px; margin: 10px; cursor: pointer; display: inline-block; border: 2px solid black; border-radius: 15px; }
+        #rojo { background-color: red; }
+        #azul { background-color: blue; color: white; }
+        #verde { background-color: green; color: white; }
+        #numero { background-color: lightgray; }
+        #palabra { background-color: lightblue; }
+        #frase { background-color: lightgreen; }
+        #conclusiones { text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Juego de Probabilidad de la IA</h1>
+    <p>Elige un color y la IA elegirá uno con base en probabilidades.</p>
+    <div id="rojo" class="color-option" onclick="jugar('rojo')">Rojo</div>
+    <div id="azul" class="color-option" onclick="jugar('azul')">Azul</div>
+    <div id="verde" class="color-option" onclick="jugar('verde')">Verde</div>
+    <h2 id="resultado"></h2>
+    <p id="explicacionColor"></p>
+    
+    <h1>Juego de Probabilidad de Números</h1>
+    <p>Elige un número y la IA elegirá uno con base en probabilidades.</p>
+    <div id="numero" class="number-option" onclick="jugarNumero(1)">1</div>
+    <div id="numero" class="number-option" onclick="jugarNumero(2)">2</div>
+    <div id="numero" class="number-option" onclick="jugarNumero(3)">3</div>
+    <h2 id="resultadoNumero"></h2>
+    <p id="explicacionNumero"></p>
+    
+    <h1>Juego de Probabilidad de Palabras</h1>
+    <p>Elige una palabra y la IA elegirá una con base en probabilidades.</p>
+    <div id="palabra" class="word-option" onclick="jugarPalabra('gato')">Gato</div>
+    <div id="palabra" class="word-option" onclick="jugarPalabra('perro')">Perro</div>
+    <div id="palabra" class="word-option" onclick="jugarPalabra('pájaro')">Pájaro</div>
+    <h2 id="resultadoPalabra"></h2>
+    <p id="explicacionPalabra"></p>
+    
+    <h1>Juego de Probabilidad de Frases</h1>
+    <p>Elige cómo continúa la frase "El gato está..." y la IA elegirá una opción con base en probabilidades.</p>
+    <select id="fraseSelect">
+        <option value="en el tejado">en el tejado</option>
+        <option value="en el jardín">en el jardín</option>
+        <option value="en el árbol">en el árbol</option>
+    </select>
+    <button onclick="jugarFrase()">Jugar</button>
+    <h2 id="resultadoFrase"></h2>
+    <p id="explicacionFrase"></p>
+    
+    <h1>Juego de Probabilidad de Frases Incompletas</h1>
+    <p>Elige un tema y completa la frase. La IA elegirá una opción con base en probabilidades.</p>
+    <select id="temaIncompletoSelect" onchange="actualizarFraseIncompleta()">
+        <option value="casa">Casa</option>
+        <option value="parque">Parque</option>
+        <option value="bosque">Bosque</option>
+    </select>
+    <p id="fraseIncompleta"></p>
+    <select id="continuacionSelect">
+        <!-- Opciones se actualizarán según el tema -->
+    </select>
+    <button onclick="jugarFraseIncompleta()">Jugar</button>
+    <h2 id="resultadoFraseIncompleta"></h2>
+    <p id="explicacionFraseIncompleta"></p>
+    
+    <h1>Conclusiones</h1>
+    <p id="conclusiones"></p>
+    
+    <script>
+        function jugar(eleccionUsuario) {
+            let opciones = ['rojo', 'azul', 'verde'];
+            let probabilidades = [0.6, 0.3, 0.1]; // 60% rojo, 30% azul, 10% verde
+            
+            let random = Math.random();
+            let acumulado = 0;
+            let eleccionIA;
+            
+            for (let i = 0; i < opciones.length; i++) {
+                acumulado += probabilidades[i];
+                if (random < acumulado) {
+                    eleccionIA = opciones[i];
+                    break;
+                }
+            }
+            
+            let mensaje = eleccionUsuario === eleccionIA ? "¡Acertaste!" : "Fallaste. La IA eligió " + eleccionIA;
+            document.getElementById("resultado").innerText = mensaje;
+            document.getElementById("explicacionColor").innerText = "Probabilidades: Rojo 60%, Azul 30%, Verde 10%. El rojo tiene la mayor probabilidad porque es el color más común.";
+        }
+
+        function jugarNumero(eleccionUsuario) {
+            let opciones = [1, 2, 3];
+            let probabilidades = [0.5, 0.3, 0.2]; // 50% 1, 30% 2, 20% 3
+            
+            let random = Math.random();
+            let acumulado = 0;
+            let eleccionIA;
+            
+            for (let i = 0; i < opciones.length; i++) {
+                acumulado += probabilidades[i];
+                if (random < acumulado) {
+                    eleccionIA = opciones[i];
+                    break;
+                }
+            }
+            
+            let mensaje = eleccionUsuario === eleccionIA ? "¡Acertaste!" : "Fallaste. La IA eligió " + eleccionIA;
+            document.getElementById("resultadoNumero").innerText = mensaje;
+            document.getElementById("explicacionNumero").innerText = "Probabilidades: 1 50%, 2 30%, 3 20%. El número 1 tiene la mayor probabilidad porque es el número más sencillo.";
+        }
+
+        function jugarPalabra(eleccionUsuario) {
+            let opciones = ['gato', 'perro', 'pájaro'];
+            let probabilidades = [0.4, 0.4, 0.2]; // 40% gato, 40% perro, 20% pájaro
+            
+            let random = Math.random();
+            let acumulado = 0;
+            let eleccionIA;
+            
+            for (let i = 0; i < opciones.length; i++) {
+                acumulado += probabilidades[i];
+                if (random < acumulado) {
+                    eleccionIA = opciones[i];
+                    break;
+                }
+            }
+            
+            let mensaje = eleccionUsuario === eleccionIA ? "¡Acertaste!" : "Fallaste. La IA eligió " + eleccionIA;
+            document.getElementById("resultadoPalabra").innerText = mensaje;
+            document.getElementById("explicacionPalabra").innerText = "Probabilidades: Gato 40%, Perro 40%, Pájaro 20%. Gato y Perro tienen la misma probabilidad porque son mascotas comunes.";
+        }
+
+        function jugarFrase() {
+            let eleccionUsuario = document.getElementById("fraseSelect").value;
+            let opciones = ['en el tejado', 'en el jardín', 'en el árbol'];
+            let probabilidades = [0.5, 0.3, 0.2]; // 50% en el tejado, 30% en el jardín, 20% en el árbol
+            
+            let random = Math.random();
+            let acumulado = 0;
+            let eleccionIA;
+            
+            for (let i = 0; i < opciones.length; i++) {
+                acumulado += probabilidades[i];
+                if (random < acumulado) {
+                    eleccionIA = opciones[i];
+                    break;
+                }
+            }
+            
+            let mensaje = eleccionUsuario === eleccionIA ? "¡Acertaste!" : "Fallaste. La IA eligió " + eleccionIA;
+            document.getElementById("resultadoFrase").innerText = mensaje;
+            document.getElementById("explicacionFrase").innerText = "Probabilidades: en el tejado 50%, en el jardín 30%, en el árbol 20%. 'En el tejado' tiene la mayor probabilidad porque es una frase común.";
+        }
+
+        function actualizarFraseIncompleta() {
+            const tema = document.getElementById("temaIncompletoSelect").value;
+            const fraseIncompleta = document.getElementById("fraseIncompleta");
+            const continuacionSelect = document.getElementById("continuacionSelect");
+            continuacionSelect.innerHTML = ""; // Limpiar opciones anteriores
+            
+            let frase, opciones;
+            if (tema === "casa") {
+                frase = "El gato está...";
+                opciones = ["en el tejado", "en el jardín", "en el sótano"];
+            } else if (tema === "parque") {
+                frase = "El perro está...";
+                opciones = ["en el césped", "en el banco", "en el estanque"];
+            } else if (tema === "bosque") {
+                frase = "El pájaro está...";
+                opciones = ["en el árbol", "en la cueva", "en el río"];
+            }
+            
+            fraseIncompleta.innerText = frase;
+            opciones.forEach(opcion => {
+                const optionElement = document.createElement("option");
+                optionElement.value = opcion;
+                optionElement.textContent = opcion;
+                continuacionSelect.appendChild(optionElement);
+            });
+        }
+        
+        function jugarFraseIncompleta() {
+            const tema = document.getElementById("temaIncompletoSelect").value;
+            const eleccionUsuario = document.getElementById("continuacionSelect").value;
+            let opciones, probabilidades;
+            
+            if (tema === "casa") {
+                opciones = ["en el tejado", "en el jardín", "en el sótano"];
+                probabilidades = [0.5, 0.3, 0.2]; // 50% tejado, 30% jardín, 20% sótano
+            } else if (tema === "parque") {
+                opciones = ["en el césped", "en el banco", "en el estanque"];
+                probabilidades = [0.4, 0.4, 0.2]; // 40% césped, 40% banco, 20% estanque
+            } else if (tema === "bosque") {
+                opciones = ["en el árbol", "en la cueva", "en el río"];
+                probabilidades = [0.3, 0.4, 0.3]; // 30% árbol, 40% cueva, 30% río
+            }
+            
+            let random = Math.random();
+            let acumulado = 0;
+            let eleccionIA;
+            
+            for (let i = 0; i < opciones.length; i++) {
+                acumulado += probabilidades[i];
+                if (random < acumulado) {
+                    eleccionIA = opciones[i];
+                    break;
+                }
+            }
+            
+            let mensaje = eleccionUsuario === eleccionIA ? "¡Acertaste!" : "Fallaste. La IA eligió " + eleccionIA;
+            document.getElementById("resultadoFraseIncompleta").innerText = mensaje;
+            document.getElementById("explicacionFraseIncompleta").innerText = `Probabilidades: ${opciones[0]} ${probabilidades[0] * 100}%, ${opciones[1]} ${probabilidades[1] * 100}%, ${opciones[2]} ${probabilidades[2] * 100}%.`;
+        }
+        
+        function mostrarConclusiones() {
+            const conclusiones = `
+                La función de probabilidad de una IA se basa en asignar probabilidades a diferentes opciones y luego seleccionar una opción en función de un número aleatorio.
+                En estos juegos, hemos visto cómo la IA elige colores, números, palabras y frases basándose en probabilidades predefinidas.
+                Por ejemplo, en el juego de colores, el rojo tiene una probabilidad del 60%, el azul del 30% y el verde del 10%. Esto significa que, en promedio, la IA elegirá el rojo con más frecuencia.
+                Las probabilidades se asignan en función de la frecuencia o la relevancia de cada opción. Por ejemplo, el rojo es un color más común, por lo que tiene una mayor probabilidad.
+                Este enfoque se utiliza en muchas aplicaciones de IA para tomar decisiones informadas y predecir resultados basados en datos históricos y patrones.
+            `;
+            document.getElementById("conclusiones").innerText = conclusiones.trim();
+        }
+        
+        // Inicializar opciones de frase incompleta según el tema seleccionado por defecto
+        actualizarFraseIncompleta();
+        // Mostrar conclusiones al final
+        mostrarConclusiones();
+    </script>
+</body>
+</html>
